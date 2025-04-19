@@ -1,0 +1,12 @@
+<mat-card class="search-card">
+    <mat-form-field appearance="fill">
+        <mat-label>Search Pokémon</mat-label>
+        <input matInput [(ngModel)]="searchQuery" [placeholder]="placeholder" maxlength="100" />
+    </mat-form-field>
+
+    <mat-slide-toggle [(ngModel)]="isAdvancedSearch" color="primary">
+        <span>Smart Search </span>
+    </mat-slide-toggle>
+
+    <button mat-raised-button color="primary" (click)="onSearchPokemon()">🔍 Search</button>
+</mat-card>

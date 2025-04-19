@@ -1,0 +1,121 @@
+.card {
+    perspective: 1000px;
+    width: 250px;
+    height: 320px;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease;
+
+    // &:hover {
+    //     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    //     transform: translateY(-5px);
+    // }
+
+    .card-inner {
+        width: 100%;
+        height: 100%;
+        border-radius: 1rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        transition: transform 0.6s ease;
+        transform-style: preserve-3d;
+        position: relative;
+    }
+
+    &.flipped .card-inner {
+        transform: rotateY(180deg);
+    }
+
+    .card-front,
+    .card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        padding: 1rem;
+        border-radius: 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .card-front {
+        text-align: center;
+
+        .poke-img {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            margin-bottom: 0.5rem;
+        }
+
+        .types {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.3rem;
+        }
+
+        .type-badge {
+            padding: 0.4rem 0.7rem;
+            border-radius: 999px;
+            font-weight: 600;
+            text-transform: capitalize;
+            background-size: 200% 200%;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        }
+    }
+
+    .card-back {
+        transform: rotateY(180deg);
+        background: #f5f5f5;
+        color: #333;
+        font-size: 1rem;
+        text-align: center;
+    }
+}
+
+.more-info-btn {
+    margin-top: 1rem;
+    padding: 6px 12px;
+    border: none;
+    background: #333;
+    color: #fff;
+    font-weight: bold;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.more-info-btn:hover {
+    background: #555;
+}
+.card {
+    perspective: 1000px;
+}
+
+.card-inner {
+    width: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.8s ease-in-out;
+    position: relative;
+}
+
+.card.flipped .card-inner,
+.card:hover .card-inner {
+    transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+    backface-visibility: hidden;
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+
+.card-back {
+    transform: rotateY(180deg);
+}

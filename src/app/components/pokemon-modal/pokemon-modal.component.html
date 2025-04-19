@@ -1,0 +1,15 @@
+<div class="modal-overlay">
+    <div class="modal-content">
+        <h2>{{ pokemon.name | titlecase }}</h2>
+        <img [src]="pokemon.ui?.img" [alt]="pokemon.name" class="poke-img" />
+        <div class="stats">
+            <div><strong>Types:</strong> {{ pokemon.types.join(' / ') }}</div>
+            <!-- Add any other stats you'd like -->
+            <div><strong>HP:</strong> 100</div>
+            <div><strong>Attack:</strong> 80</div>
+            <div><strong>Defense:</strong> 70</div>
+            <div><strong>Speed:</strong> 90</div>
+        </div>
+        <button (click)="closeModal()">Close</button>
+    </div>
+</div>

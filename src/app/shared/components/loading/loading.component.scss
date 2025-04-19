@@ -1,0 +1,55 @@
+.loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 1000;
+
+    .loading-content {
+        .walking-pokemon {
+            width: 120px;
+            margin-bottom: 1rem;
+            animation: walk-across 3s linear infinite;
+        }
+
+        .dot-animate::after {
+            content: '';
+            animation: dots 4s steps(3, end) infinite;
+        }
+
+        p {
+            font-size: 1.2rem;
+            color: #ff5252;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin: 0.5rem 0;
+        }
+    }
+}
+
+@keyframes walk-across {
+    0% {
+        transform: translateX(-80px);
+    }
+    100% {
+        transform: translateX(80px);
+    }
+}
+
+@keyframes dots {
+    0% {
+        content: '';
+    }
+    33% {
+        content: '.';
+    }
+    66% {
+        content: '..';
+    }
+    100% {
+        content: '...';
+    }
+}

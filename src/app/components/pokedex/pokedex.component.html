@@ -1,0 +1,103 @@
+<!-- <app-loading [loading]="loading"></app-loading> -->
+<div *ngIf="!loading" class="pokedex-container">
+    <div class="search-section">
+        <app-search
+            #pokemonSearch
+            class="search-container"
+            (searchClicked)="onSearchClick()"
+            (searchPokemon)="onSearchPokemon($event)"
+        ></app-search>
+    </div>
+
+    <div class="pokemon-grid">
+        <ng-container *ngFor="let pokemon of filteredPokemonList">
+            <div
+                class="card"
+                [class.flipped]="pokemon.ui?.isFlipped"
+                (click)="onToggleFlip(pokemon)"
+            >
+                <div class="card-content" [style.background]="pokemon.ui?.bg">
+                    <div class="card-front">
+                        <div class="pokemon-image">
+                            <img [src]="pokemon.ui?.img" [alt]="pokemon.name" loading="lazy" />
+                        </div>
+                        <div class="pokemon-info">
+                            <h3 class="pokemon-name">{{ pokemon.name | titlecase }}</h3>
+                            <div class="pokemon-types">
+                                <span
+                                    *ngFor="let type of pokemon.types"
+                                    class="type-badge"
+                                    [style.background]="type.type.name | typeBgColor"
+                                >
+                                    <span class="type-icon">
+                                        {{ type.type.name | typeBgColor: 'emoji' }}
+                                    </span>
+                                    <span class="type-name">{{ type.type.name | uppercase }}</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-back">
+                        <div class="measurements">
+                            <p><strong>Weight:</strong> {{ pokemon.weight / 10 }} kg</p>
+                            <p><strong>Height:</strong> {{ pokemon.height / 10 }} m</p>
+                        </div>
+
+                        <div class="stats">
+                            <div *ngFor="let stat of pokemon.stats">
+                                <label>
+                                    {{ stat.stat.name.toUpperCase() }}: {{ stat.base_stat }}/300
+                                </label>
+                                <div class="bar">
+                                    <div
+                                        class="progress {{ stat.stat.name }}"
+                                        [style.width.%]="(stat.base_stat / 300) * 100"
+                                    ></div>
+                                </div>
+                            </div>
+
+                            <label>EXP: {{ pokemon.base_experience }}/1000</label>
+                            <div class="bar">
+                                <div
+                                    class="progress exp"
+                                    [style.width.%]="(pokemon.base_experience / 1000) * 100"
+                                ></div>
+                            </div>
+
+                            <!-- <a
+                                href="javascript:void(0)"
+                                class="details-link"
+                                (click)="$event.stopPropagation(); onShowModal(pokemon)"
+                            >
+                                View more details
+                            </a> -->
+
+                            <div class="details-button-container">
+                                <button
+                                    class="know-more-btn"
+                                    (click)="onShowModal(pokemon); $event.stopPropagation()"
+                                >
+                                    <mat-icon>{{ knowMoreIcon }}</mat-icon> Wanna know more?
+                                    <!-- <span>👀</span> Wanna know more? -->
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+
+        <div class="no-results" *ngIf="filteredPokemonList.length === 0">
+            <img src="assets/sad-pikachu.gif" alt="No Pokémon found" />
+            <p>{{ noResult }}</p>
+        </div>
+    </div>
+
+    <mat-paginator
+        #pagination
+        [length]="totalCount"
+        [pageSize]="pageSize"
+        (page)="onPageChange($event)"
+    ></mat-paginator>
+</div>
