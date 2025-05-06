@@ -22,7 +22,6 @@ export class SearchComponent {
     searchQuery$ = this.searchQuerySubject.asObservable();
 
     private isAdvancedSearchSubject = new BehaviorSubject<boolean>(false);
-    isAdvancedSearch$ = this.isAdvancedSearchSubject.asObservable();
 
     constructor(private _pokemonService: PokemonService) {}
 
@@ -32,16 +31,7 @@ export class SearchComponent {
             : '🔍 Search Pokémon by name';
     }
 
-    onSearchPokemon(): void {
-        const currentQuery = this.searchQuery.trim();
-
-        if (this._isSearchParamsNoChanges(currentQuery)) {
-            return;
-        }
-
-        this.searchClicked.emit();
-        this.searchQuerySubject.next(currentQuery);
-        this.isAdvancedSearchSubject.next(this.isAdvancedSearch);
+    ngOnInit(): void {
         this.searchQuery$
             .pipe(
                 distinctUntilChanged(),
@@ -58,6 +48,18 @@ export class SearchComponent {
                     });
                 },
             });
+    }
+
+    onSearchPokemon(): void {
+        const currentQuery = this.searchQuery.trim();
+
+        if (this._isSearchParamsNoChanges(currentQuery)) {
+            return;
+        }
+
+        this.searchClicked.emit();
+        this.searchQuerySubject.next(currentQuery);
+        this.isAdvancedSearchSubject.next(this.isAdvancedSearch);
     }
 
     private _getSearchResults(query: string): Observable<PokemonResponse> {

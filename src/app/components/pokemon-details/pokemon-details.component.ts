@@ -44,6 +44,8 @@ export class PokemonDetailsComponent {
         'effect',
     ];
 
+    damageEffects = ['superEffective', 'notVeryEffective', 'noEffect'];
+
     constructor(
         private service: PokemonService,
         private cd: ChangeDetectorRef,

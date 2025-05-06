@@ -36,7 +36,7 @@ export class LoadingComponent implements OnChanges, OnDestroy {
         );
 
         const randomNum = Math.floor(Math.random() * 10) + 1;
-        this.loadingGif = `assets/loading-${randomNum}.gif`;
+        this.loadingGif = `assets/loading/loading-${randomNum}.gif`;
     }
 
     private stopLoadingAnimation(): void {

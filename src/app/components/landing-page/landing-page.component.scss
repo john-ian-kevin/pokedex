@@ -1,44 +1,62 @@
-.container {
+/* Reusable Styles */
+%flex-center {
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    height: 100vh;
+    align-items: center;
+}
+
+@mixin measure($height: null, $width: null) {
+    height: $height;
+    width: $width;
+}
+
+@mixin transform($transform, $opacity: null) {
+    transform: $transform;
+    opacity: $opacity;
+}
+
+@mixin background($bg, $position: null) {
+    background: $bg;
+    position: $position;
+}
+
+/* Landing Page Styles */
+.container {
+    @extend %flex-center;
+    @include measure(100vh);
+    @include background(linear-gradient(90deg, #f8d030, #f08030, #ff416c));
+    flex-direction: column;
     font-family: Arial, sans-serif;
     overflow: hidden;
-    background: linear-gradient(90deg, #f8d030, #f08030, #ff416c);
     background-size: 300% 300%;
     animation: gradientShift 6s ease infinite;
 
     &::after {
+        @include measure(100%, 100%);
+        @include background(
+            radial-gradient(circle, rgba(255, 255, 0, 0.5) 0%, rgba(255, 255, 0, 0) 80%),
+            absolute
+        );
         content: '';
-        position: absolute;
         top: 0;
         left: 0;
-        width: 100%;
-        height: 100%;
-        background: radial-gradient(circle, rgba(255, 255, 0, 0.5) 0%, rgba(255, 255, 0, 0) 80%);
         animation: sparks 2s infinite;
     }
 
     .logo {
-        width: 300px;
+        @include measure(null, 300px);
         margin: 1rem 0;
     }
 
     .pokeball {
+        @extend %flex-center;
+        @include measure(80vh, 75vh);
+        @include background(linear-gradient(to bottom, #f00 50%, #fff 50%), relative);
         animation: bounce 1s infinite ease-in-out;
         overflow: hidden;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        width: 75vh;
-        height: 80vh;
-        background: linear-gradient(to bottom, #f00 50%, #fff 50%);
         border-radius: 50%;
-        border: 15px solid black;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
+        border: 15px solid #000;
         margin-bottom: 1rem;
         padding: 0;
         z-index: 4;
@@ -48,41 +66,36 @@
         }
 
         &::before {
+            @include measure(50%, 100%);
+            @include background(#fff, absolute);
             content: '';
-            width: 100%;
-            height: 50%;
-            background: #fff;
-            position: absolute;
             bottom: -10px;
-            border-top: 20px solid black;
+            border-top: 20px solid #000;
         }
 
         &::after {
+            @include measure(15vh, 15vh);
+            @include background(#fff, absolute);
             content: '';
-            position: absolute;
-            width: 15vh;
-            height: 15vh;
-            background: #fff;
             border-radius: 50%;
-            border: 10px solid black;
+            border: 10px solid #000;
         }
 
         button {
-            position: absolute;
+            @include measure(null, 15vh);
+            @include background(none, absolute);
             z-index: 2;
-            background: none;
             border: none;
             font-size: 18px;
             font-weight: bold;
-            color: black;
+            color: #000;
             cursor: pointer;
-            width: 15vh;
 
             &:hover {
+                @include measure(15vh);
+                @include background(#f00);
                 color: #fff;
                 box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-                background-color: red;
-                height: 15vh;
                 border-radius: 50%;
                 font-size: 24px;
             }
@@ -90,13 +103,14 @@
     }
 }
 
+/* Animation Styles */
 @keyframes bounce {
     0%,
     100% {
-        transform: translateY(0);
+        @include transform(translateY(0));
     }
     50% {
-        transform: translateY(-20px);
+        @include transform(translateY(-20px));
     }
 }
 
@@ -115,11 +129,9 @@
 @keyframes sparks {
     0%,
     100% {
-        transform: scale(1);
-        opacity: 0.5;
+        @include transform(scale(1), 0.5);
     }
     50% {
-        transform: scale(1.5);
-        opacity: 0.8;
+        @include transform(scale(1.5), 0.8);
     }
 }

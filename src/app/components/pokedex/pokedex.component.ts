@@ -1,19 +1,24 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+
 import { MatPaginator } from '@angular/material/paginator';
-import { PokemonService } from '@app/core/services/pokemon.service';
-import { DynamicComponentService } from '@app/core/services/dynamic-component.service';
+
 import { PokemonDetailsComponent } from '@app/components/pokemon-details/pokemon-details.component';
-import { Pokemon, PokemonResponse } from '@app/core/interfaces/pokemon.inteface';
 import { SearchComponent } from '@app/shared/components/search/search.component';
+
+import { DynamicComponentService } from '@app/core/services/dynamic-component.service';
+import { PokemonService } from '@app/core/services/pokemon.service';
+
+import { Pokemon, PokemonResponse } from '@app/core/interfaces/pokemon.inteface';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-pokedex',
     templateUrl: './pokedex.component.html',
     styleUrls: ['./pokedex.component.scss'],
 })
-export class PokedexComponent implements OnInit, AfterViewInit, OnDestroy {
-    @ViewChild('pagination') paginator: MatPaginator | undefined;
-    @ViewChild('pokemonSearch') pokemonSearch: SearchComponent | undefined;
+export class PokedexComponent implements OnInit, OnDestroy, AfterViewInit {
+    @ViewChild('paginator') paginator!: MatPaginator;
+    @ViewChild('searchElement') searchElement!: SearchComponent;
 
     pokemonList: ReadonlyArray<Pokemon> = [];
     filteredPokemonList: Pokemon[] = [];
@@ -28,7 +33,7 @@ export class PokedexComponent implements OnInit, AfterViewInit, OnDestroy {
 
     knowMoreIcon = 'catching_pokemon';
 
-    idleTimeout: any;
+    private _subscription = new Subscription();
 
     constructor(
         private _pokemonService: PokemonService,
@@ -40,11 +45,21 @@ export class PokedexComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit(): void {
-        this.startPulseTimer();
+        this._subscription.add(
+            this.searchElement.searchPokemon.subscribe((pokemonResponse: PokemonResponse) => {
+                this.onPokemonSearch(pokemonResponse);
+            }),
+        );
+
+        this._subscription.add(
+            this.paginator.page.subscribe((event) => {
+                this.onPageChange(event);
+            }),
+        );
     }
 
     ngOnDestroy(): void {
-        this.paginator?.page.unsubscribe();
+        this._subscription.unsubscribe();
     }
 
     fetchNewData(offset?: number): void {
@@ -84,11 +99,11 @@ export class PokedexComponent implements OnInit, AfterViewInit, OnDestroy {
         this.loading = true;
     }
 
-    onSearchPokemon(pokemonResponse: PokemonResponse): void {
+    onPokemonSearch(pokemonResponse: PokemonResponse): void {
         const { pokemonDetails, count } = pokemonResponse;
 
         if (pokemonDetails.length === 0) {
-            if (this.pokemonSearch?.isAdvancedSearch) {
+            if (this.searchElement.isAdvancedSearch) {
                 this.noResult =
                     'No Pokémon matched your search criteria. Try using different keywords!';
             } else {
@@ -102,31 +117,10 @@ export class PokedexComponent implements OnInit, AfterViewInit, OnDestroy {
         this.loading = false;
     }
 
-    private _stopLoadingAnimation() {
-        setTimeout(() => {
-            this.loading = false;
-        }, 1000);
-    }
-
-    onPokemonClick(pokemon: Pokemon): void {
-        const detailsRef = this._dynamicComponentService.create(PokemonDetailsComponent, {
-            pokemon,
-            close: () => detailsRef.destroy(),
-        });
-    }
-
     onToggleFlip(pokemon: Pokemon): void {
         if (pokemon.ui) {
             pokemon.ui.isFlipped = !pokemon.ui.isFlipped;
         }
-    }
-
-    // Open a modal with more details about the Pokémon
-    openModal(pokemon: any) {
-        const detailsRef = this._dynamicComponentService.create(PokemonDetailsComponent, {
-            pokemon,
-            close: () => detailsRef.destroy(),
-        });
     }
 
     onShowModal(pokemon: Pokemon): void {
@@ -136,21 +130,9 @@ export class PokedexComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 
-    startPulseTimer() {
-        this.clearPulse(); // Just in case
-        this.idleTimeout = setTimeout(() => {
-            const btn = document.querySelector('.know-more-btn');
-            if (btn) {
-                btn.classList.add('pulse');
-            }
-        }, 5000); // Trigger after 5s
-    }
-
-    clearPulse() {
-        clearTimeout(this.idleTimeout);
-        const btn = document.querySelector('.know-more-btn');
-        if (btn) {
-            btn.classList.remove('pulse');
-        }
+    private _stopLoadingAnimation(): void {
+        setTimeout(() => {
+            this.loading = false;
+        }, 1000);
     }
 }

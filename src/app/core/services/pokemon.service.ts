@@ -16,7 +16,6 @@ import { ColorService } from '@services/color.service';
 
 import {
     Ability,
-    EvolutionChainStep,
     Pokemon,
     PokemonListResponse,
     PokemonResponse,
